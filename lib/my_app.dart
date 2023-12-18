@@ -10,6 +10,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Pretendard'
+      ),
       home: ChangeNotifierProvider.value(  // Provider를 사용하여 scrollStatusNotifier를 전역적으로 제공
           value: scrollStatusNotifier,
           child: const MyHomePage(title: 'Mofin Website Demo Page')),

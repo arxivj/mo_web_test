@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mo_web_test/utils/animation_calculator.dart';
 
 import '../providers/scroll_status_notifier.dart';
+import '../widgets/service_intro.dart';
 import '../widgets/title_widget.dart';
 
 // 상태를 가진 위젯, 애플리케이션의 메인 페이지
@@ -23,6 +24,10 @@ class _MyHomePageState extends State<MyHomePage> {
   bool scrolling = false;
   Color backgroundColor = Colors.white;
   bool fadeIn = false;
+
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+
 
 // 위젯 초기화
   @override
@@ -74,17 +79,18 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: backgroundColor,
           body: AnimatedOpacity(
             opacity: fadeIn ? 1 : 0, // 페이드 인 애니메이션 적용
-            duration: const Duration(seconds: 1),
+            duration: const Duration(milliseconds: 700),
             child: Center(
               child: Stack(
                 fit: StackFit.expand,
                 children: [
                   // 추가할 위젯들
                   buildTitle(_size!),
+                  ServiceIntroduction(size: _size!),
                   SingleChildScrollView(
                     controller: _scrollController, // 스크롤 컨트롤러 적용
                     physics:
-                        fadeIn ? null : const NeverScrollableScrollPhysics(),
+                    fadeIn ? null : const NeverScrollableScrollPhysics(),
                     child: SizedBox(
                       height: scrollHeight,
                     ),

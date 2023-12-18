@@ -70,7 +70,6 @@ Consumer<ScrollStatusNotifier> buildTitle(Size size) {
                               style: const TextStyle(
                                   fontSize: 96,
                                   fontWeight: FontWeight.w500,
-                                  fontFamily: 'SFPro',
                                   color: Colors.black),
                               maxLines: 1,
                             ),
@@ -83,7 +82,6 @@ Consumer<ScrollStatusNotifier> buildTitle(Size size) {
                               style: const TextStyle(
                                   fontSize: 96,
                                   fontWeight: FontWeight.w500,
-                                  fontFamily: 'SFPro',
                                   color: Colors.black),
                               maxLines: 1,
                             ),
