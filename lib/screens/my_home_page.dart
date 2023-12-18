@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mo_web_test/utils/animation_calculator.dart';
+import 'package:mo_web_test/widgets/mofin_intro.dart';
 
 import '../providers/scroll_status_notifier.dart';
 import '../widgets/service_intro.dart';
@@ -56,11 +57,11 @@ class _MyHomePageState extends State<MyHomePage> {
 // 배경색을 스크롤 위치에 따라 변경하는 함수
   void changeBackgroundColor() {
     if (backgroundColor == Colors.white &&
-        scrollStatusNotifier.scrollPercentage > 6.3) {
-      backgroundColor = Colors.black;
+        scrollStatusNotifier.scrollPercentage > 2.1) {
+      backgroundColor = const Color(0xFFF7F7F7);
       setState(() {});
-    } else if (backgroundColor == Colors.black &&
-        scrollStatusNotifier.scrollPercentage < 6.1) {
+    } else if (backgroundColor == const Color(0xFFF7F7F7) &&
+        scrollStatusNotifier.scrollPercentage < 2.1) {
       backgroundColor = Colors.white;
       setState(() {});
     }
@@ -87,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   // 추가할 위젯들
                   buildTitle(_size!),
                   ServiceIntroduction(size: _size!),
+                  MofinIntroduction(size: _size!),
                   SingleChildScrollView(
                     controller: _scrollController, // 스크롤 컨트롤러 적용
                     physics:

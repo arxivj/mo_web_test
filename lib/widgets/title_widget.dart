@@ -13,7 +13,7 @@ Consumer<ScrollStatusNotifier> buildTitle(Size size) {
     builder: (context, ssn, child) {
       // ssn은 Scroll Status Notifier
       final portionValue = AnimationCalculator.linearInterpolateToZeroOne(
-          scrollPercentage: ssn.scrollPercentage, start: 0, end: 0.45);
+          scrollPercentage: ssn.scrollPercentage, start: 0, end: 1);
 
       final opacity = -pow(portionValue, 6) + 1; // 투명도 계산
       return Transform.translate(
