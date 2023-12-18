@@ -78,31 +78,64 @@ class _MyHomePageState extends State<MyHomePage> {
         scrollHeight = _size!.height * 7.3; // 스크롤 높이 설정
         return Scaffold(
           backgroundColor: backgroundColor,
-          body: AnimatedOpacity(
-            opacity: fadeIn ? 1 : 0, // 페이드 인 애니메이션 적용
-            duration: const Duration(milliseconds: 700),
-            child: Center(
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // 추가할 위젯들
-                  buildTitle(_size!),
-                  ServiceIntroduction(size: _size!),
-                  MofinIntroduction(size: _size!),
-                  SingleChildScrollView(
-                    controller: _scrollController, // 스크롤 컨트롤러 적용
-                    physics:
-                    fadeIn ? null : const NeverScrollableScrollPhysics(),
-                    child: SizedBox(
-                      height: scrollHeight,
-                    ),
+          floatingActionButton: scrolling
+              ? null
+              : FloatingActionButton.small(
+            onPressed: () {
+              setState(() {
+                scrolling = true;
+              });
+              animateToEnd().then((value) => goBackToTop().then((value) {
+                setState(() {
+                  scrolling = false;
+                });
+              }));
+            },
+            child: const Icon(Icons.play_arrow),
+          ),
+          body: Center(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // 추가할 위젯들
+                AnimatedBackgroundTitle(size: _size!),
+                ServiceIntroduction(size: _size!),
+                MofinIntroduction(size: _size!),
+                SingleChildScrollView(
+                  controller: _scrollController, // 스크롤 컨트롤러 적용
+                  physics:
+                  fadeIn ? null : const NeverScrollableScrollPhysics(),
+                  child: SizedBox(
+                    height: scrollHeight,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
       },
     );
   }
+
+
+
+  // 스크롤을 끝까지 이동시키는 애니메이션
+  Future<void> animateToEnd() {
+    final leftScroll = scrollHeight! - scrollStatusNotifier.scrollPos;
+    double seconds = leftScroll / scrollHeight! * 7;
+    if (seconds <= 0) {
+      seconds = 0.1;
+    }
+    return _scrollController.animateTo(scrollHeight!,
+        duration: Duration(milliseconds: (seconds * 2000).toInt()),
+        curve: Curves.linear);
+  }
+
+  // 스크롤을 맨 위로 되돌리는 애니메이션
+  Future<void> goBackToTop() {
+    return _scrollController.animateTo(0,
+        duration: const Duration(seconds: 2), curve: Curves.easeInOutCubic);
+  }
+
+
 }
