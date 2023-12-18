@@ -30,7 +30,13 @@ class _MyHomePageState extends State<MyHomePage> {
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       // 스크롤 위치 변경에 따라 배경색 변경
-      scrollStatusNotifier.setScrollPos(_scrollController.offset);
+      scrollStatusNotifier.setScrollPos(_scrollController.position.pixels);
+      print(" pixel :  ${_scrollController.position.pixels}");
+      print(" offset :  : ${_scrollController.offset}");
+      print(" max :  : ${_scrollController.position.maxScrollExtent}");
+      print(" min :  : ${_scrollController.position.minScrollExtent}");
+      print(" Viewport Dimension :  : ${_scrollController.position.viewportDimension}");
+      print(" 현재 스크롤 비율 : ${scrollStatusNotifier.scrollPercentage * 100}");
       changeBackgroundColor();
     });
     // 초기 페이드 인 애니메이션 지연 실행
@@ -60,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return LayoutBuilder(
       builder: (BuildContext context, constraints) {
         _size = MediaQuery.of(context).size; // 현재 화면 크기를 가져옴
+        print("현재 화면의 크기 : ${_size}");
         scrollStatusNotifier.size = _size!;
         // scrollHeight = _size!.height * 5;
         scrollHeight = _size!.height * 7.3; // 스크롤 높이 설정
