@@ -53,7 +53,6 @@ class _MofinIntroductionState extends State<MofinIntroduction> {
     );
   }
 
-
   Widget _buildAnimatedIntro(BuildContext context, double animationValue) {
     double textSize = 40.sp;
     return SizedBox(
@@ -117,18 +116,35 @@ class _MofinIntroductionState extends State<MofinIntroduction> {
               ],
             ),
           ),
+          Expanded(
+            child: Column(
+              children: [
+                _buildAnimatedImage(
+                  imagePath: 'assets/images/intro_1.png', // 왼쪽 이미지 경로
+                  animationValue: animationValue,
+                  isLeftToRight: true,
+                ),
+                _buildAnimatedImage(
+                  imagePath: 'assets/images/intro_2.png', // 오른쪽 이미지 경로
+                  animationValue: animationValue,
+                  isLeftToRight: false,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildAnimatedText({required String text,
-    String? additionalText,
-    required double animationValue,
-    required bool isLeftToRight,
-    required double fontSize,
-    required String color,
-    String? additionalColor}) {
+  Widget _buildAnimatedText(
+      {required String text,
+      String? additionalText,
+      required double animationValue,
+      required bool isLeftToRight,
+      required double fontSize,
+      required String color,
+      String? additionalColor}) {
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0.0, end: animationValue),
       duration: const Duration(milliseconds: 100),
@@ -137,52 +153,61 @@ class _MofinIntroductionState extends State<MofinIntroduction> {
         return Opacity(
           opacity: value,
           child: Transform.translate(
-            offset:
-            Offset(isLeftToRight ? 640.sp * (1 - value) : -640.sp * (1 - value),
+            offset: Offset(
+                isLeftToRight ? 640.sp * (1 - value) : -640.sp * (1 - value),
                 0),
             child: additionalText == null
                 ? Text(
-              text,
-              style: TextStyle(
-                fontSize: fontSize,
-                color: Color(int.parse("0xff$color")),
-              ),
-            )
-                : RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: text,
+                    text,
                     style: TextStyle(
                       fontSize: fontSize,
                       color: Color(int.parse("0xff$color")),
                     ),
-                  ),
-                  TextSpan(
-                    text: additionalText,
-                    style: TextStyle(
-                      fontSize: fontSize,
-                      color: Color(
-                          int.parse("0xff${additionalColor ?? color}")),
+                  )
+                : RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: text,
+                          style: TextStyle(
+                            fontSize: fontSize,
+                            color: Color(int.parse("0xff$color")),
+                          ),
+                        ),
+                        TextSpan(
+                          text: additionalText,
+                          style: TextStyle(
+                            fontSize: fontSize,
+                            color: Color(
+                                int.parse("0xff${additionalColor ?? color}")),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
           ),
         );
       },
     );
   }
 
-
-
-
-
+  Widget _buildAnimatedImage({
+    required String imagePath,
+    required double animationValue,
+    required bool isLeftToRight,
+  }) {
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 1.0, end: animationValue),
+      duration: const Duration(milliseconds: 500),
+      builder: (context, double value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, 1150.sp * (1 - value)),
+            child: Image.asset(imagePath),
+          ),
+        );
+      },
+    );
+  }
 }
-
-
-
-
-
-
