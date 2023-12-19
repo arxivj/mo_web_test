@@ -3,6 +3,7 @@ import 'package:mo_web_test/utils/animation_calculator.dart';
 import 'package:mo_web_test/widgets/mofin_intro.dart';
 
 import '../providers/scroll_status_notifier.dart';
+import '../widgets/rotate_circle.dart';
 import '../widgets/service_intro.dart';
 import '../widgets/title_widget.dart';
 
@@ -99,8 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 // 추가할 위젯들
                 AnimatedBackgroundTitle(size: _size!),
-                ServiceIntroduction(size: _size!),
-                MofinIntroduction(size: _size!),
+                // ServiceIntroduction(size: _size!),
+                // MofinIntroduction(size: _size!),
+                RotateCircle(size: _size!),
                 SingleChildScrollView(
                   controller: _scrollController, // 스크롤 컨트롤러 적용
                   physics:
