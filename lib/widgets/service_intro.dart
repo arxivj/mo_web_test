@@ -139,7 +139,7 @@ class _WonderfulTextAnimState extends State<ServiceIntroduction> {
     return Opacity(
       opacity: pow(
               AnimationCalculator.linearInterpolateToZeroOne(
-                  scrollPercentage: ssn.scrollPercentage, start: 3.0, end: .3),
+                  scrollPercentage: ssn.scrollPercentage, start: 3.0, end: 3.3),
               2)
           .toDouble(),
       child: Transform.translate(

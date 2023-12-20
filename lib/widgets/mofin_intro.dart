@@ -9,11 +9,12 @@ class MofinIntroduction extends StatefulWidget {
   const MofinIntroduction({super.key, required this.size});
 
   @override
-  _MofinIntroductionState createState() => _MofinIntroductionState();
+  MofinIntroductionState createState() => MofinIntroductionState();
 }
 
-class _MofinIntroductionState extends State<MofinIntroduction> {
+class MofinIntroductionState extends State<MofinIntroduction> {
   late ScrollController _scrollController;
+  double? startScrollPos;
 
   @override
   void initState() {
@@ -23,6 +24,12 @@ class _MofinIntroductionState extends State<MofinIntroduction> {
   }
 
   void _scrollListener() {
+    final scrollPercentage = Provider.of<ScrollStatusNotifier>(context, listen: false).scrollPercentage;
+    if (scrollPercentage > 2.1) {
+      startScrollPos ??= _scrollController.position.pixels;
+    } else {
+      startScrollPos = null;
+    }
     setState(() {});
   }
 
@@ -139,12 +146,14 @@ class _MofinIntroductionState extends State<MofinIntroduction> {
 
   Widget _buildAnimatedText(
       {required String text,
-      String? additionalText,
-      required double animationValue,
-      required bool isLeftToRight,
-      required double fontSize,
-      required String color,
-      String? additionalColor}) {
+        String? additionalText,
+        required double animationValue,
+        required bool isLeftToRight,
+        required double fontSize,
+        required String color,
+        String? additionalColor}) {
+    double offsetValue = startScrollPos != null ? _scrollController.position.pixels - startScrollPos! : 0;
+
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0.0, end: animationValue),
       duration: const Duration(milliseconds: 100),
@@ -154,7 +163,7 @@ class _MofinIntroductionState extends State<MofinIntroduction> {
           opacity: value,
           child: Transform.translate(
             offset: Offset(
-                isLeftToRight ? 640.sp * (1 - value) : -640.sp * (1 - value),
+                isLeftToRight ? 640.sp * (1 - value) - offsetValue : -640.sp * (1 - value) - offsetValue,
                 0),
             child: additionalText == null
                 ? Text(
@@ -196,6 +205,8 @@ class _MofinIntroductionState extends State<MofinIntroduction> {
     required double animationValue,
     required bool isLeftToRight,
   }) {
+    double offsetValue = startScrollPos != null ? _scrollController.position.pixels - startScrollPos! : 0;
+
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 1.0, end: animationValue),
       duration: const Duration(milliseconds: 500),
@@ -203,7 +214,7 @@ class _MofinIntroductionState extends State<MofinIntroduction> {
         return Opacity(
           opacity: value,
           child: Transform.translate(
-            offset: Offset(0, 1150.sp * (1 - value)),
+            offset: Offset(0, 1150.sp * (1 - value) - offsetValue),
             child: Image.asset(imagePath),
           ),
         );
