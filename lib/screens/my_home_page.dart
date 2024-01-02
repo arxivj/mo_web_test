@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 // 추가할 위젯들
                 AnimatedBackgroundTitle(size: _size!),
                 ServiceIntroduction(size: _size!),
-                MofinIntroduction(size: _size!),
+                SingleChildScrollView(child: MofinIntroduction(size: _size!)),
                 // RotateCircle(size: _size!),
                 SingleChildScrollView(
                   controller: _scrollController, // 스크롤 컨트롤러 적용

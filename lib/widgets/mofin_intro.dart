@@ -147,12 +147,11 @@ class MofinIntroductionState extends State<MofinIntroduction> {
           ],
         ),
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      Wrap(
         children: [
           SizedBox(
-            width: 730,
-            height: 530,
+            width: 730.w,
+            height: 530.h,
             child: _buildAnimatedImage(
               imagePath: 'assets/images/intro_1.png',
               animationValue: animationValue,
@@ -161,8 +160,8 @@ class MofinIntroductionState extends State<MofinIntroduction> {
             ),
           ),
           SizedBox(
-            width: 730,
-            height: 530,
+            width: 730.w,
+            height: 530.h,
             child: _buildAnimatedImage(
               imagePath: 'assets/images/intro_2.png',
               animationValue: animationValue,
