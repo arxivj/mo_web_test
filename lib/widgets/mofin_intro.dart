@@ -147,7 +147,7 @@ class MofinIntroductionState extends State<MofinIntroduction> {
           ],
         ),
       ),
-      Wrap(
+      Stack(
         children: [
           SizedBox(
             width: 730.w,
