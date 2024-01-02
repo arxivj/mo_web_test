@@ -24,7 +24,9 @@ class MofinIntroductionState extends State<MofinIntroduction> {
   }
 
   void _scrollListener() {
-    final scrollPercentage = Provider.of<ScrollStatusNotifier>(context, listen: false).scrollPercentage;
+    final scrollPercentage =
+        Provider.of<ScrollStatusNotifier>(context, listen: false)
+            .scrollPercentage;
     if (scrollPercentage > 2.1) {
       startScrollPos ??= _scrollController.position.pixels;
     } else {
@@ -44,14 +46,22 @@ class MofinIntroductionState extends State<MofinIntroduction> {
   Widget build(BuildContext context) {
     return Consumer<ScrollStatusNotifier>(
       builder: (context, scrollStatus, child) {
-        double animationStartValue = 0.7;
-        double animationEndValue = 2.1;
+        double animationStartValue = 1;
+        double animationEndValue = 1.4;
 
-        if (scrollStatus.scrollPercentage > animationStartValue &&
-            scrollStatus.scrollPercentage < animationEndValue) {
-          double animationValue =
-              (scrollStatus.scrollPercentage - animationStartValue) /
-                  (animationEndValue - animationStartValue);
+        if (scrollStatus.scrollPercentage >= animationStartValue) {
+          double animationValue;
+          if (scrollStatus.scrollPercentage < animationEndValue) {
+            animationValue =
+                (scrollStatus.scrollPercentage - animationStartValue) /
+                    (animationEndValue - animationStartValue);
+          } else {
+            animationValue = 1.0;
+          }
+
+          if (scrollStatus.scrollPercentage > 2.1) {
+            animationValue = 0;
+          }
           return _buildAnimatedIntro(context, animationValue);
         } else {
           return Container();
@@ -62,30 +72,37 @@ class MofinIntroductionState extends State<MofinIntroduction> {
 
   Widget _buildAnimatedIntro(BuildContext context, double animationValue) {
     double textSize = 40.sp;
-    return SizedBox(
-      width: widget.size.width,
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
+    return Column(children: [
+      const SizedBox(
+        height: 160,
+      ),
+      SizedBox(
+        width: widget.size.width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
               children: [
                 _buildAnimatedText(
                     text: '금융에 혁신을 더하다',
                     animationValue: animationValue,
                     isLeftToRight: false,
                     fontSize: 28.sp,
-                    color: '000000'),
+                    color: '000000',
+                    fontWeight: FontWeight.w700),
                 _buildAnimatedText(
                     text: 'MOFIN',
                     animationValue: animationValue,
                     isLeftToRight: false,
                     fontSize: 96.sp,
-                    color: '000000'),
+                    color: '000000',
+                    fontWeight: FontWeight.w800),
               ],
             ),
-          ),
-          Expanded(
-            child: Column(
+            const SizedBox(
+              width: 80,
+            ),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildAnimatedText(
@@ -93,25 +110,29 @@ class MofinIntroductionState extends State<MofinIntroduction> {
                     animationValue: animationValue,
                     isLeftToRight: true,
                     fontSize: textSize,
-                    color: '000000'),
+                    color: '000000',
+                    fontWeight: FontWeight.w700),
                 _buildAnimatedText(
                     text: '공공 및 금융기관의 데이터를 제공받아 이를 수집',
                     animationValue: animationValue,
                     isLeftToRight: true,
                     fontSize: textSize,
-                    color: '000000'),
+                    color: '000000',
+                    fontWeight: FontWeight.w700),
                 _buildAnimatedText(
                     text: '빅데이터 분석, 가공하는 축적된 기술력을 바탕으로',
                     animationValue: animationValue,
                     isLeftToRight: true,
                     fontSize: textSize,
-                    color: '000000'),
+                    color: '000000',
+                    fontWeight: FontWeight.w700),
                 _buildAnimatedText(
                     text: '개인투자자 및 기관 투자자 모두에게 편익을 제공하는 ',
                     animationValue: animationValue,
                     isLeftToRight: true,
                     fontSize: textSize,
-                    color: '000000'),
+                    color: '000000',
+                    fontWeight: FontWeight.w700),
                 _buildAnimatedText(
                     text: '금융투자 서비스 기업',
                     additionalText: '입니다.',
@@ -119,40 +140,54 @@ class MofinIntroductionState extends State<MofinIntroduction> {
                     isLeftToRight: true,
                     fontSize: textSize,
                     color: 'AB2C20',
-                    additionalColor: '000000'),
+                    additionalColor: '000000',
+                    fontWeight: FontWeight.w700),
               ],
             ),
+          ],
+        ),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 730,
+            height: 530,
+            child: _buildAnimatedImage(
+              imagePath: 'assets/images/intro_1.png',
+              animationValue: animationValue,
+              startAnimationValue: 0.2,
+              endAnimationValue: 0.8,
+            ),
           ),
-          Expanded(
-            child: Column(
-              children: [
-                _buildAnimatedImage(
-                  imagePath: 'assets/images/intro_1.png', // 왼쪽 이미지 경로
-                  animationValue: animationValue,
-                  isLeftToRight: true,
-                ),
-                _buildAnimatedImage(
-                  imagePath: 'assets/images/intro_2.png', // 오른쪽 이미지 경로
-                  animationValue: animationValue,
-                  isLeftToRight: false,
-                ),
-              ],
+          SizedBox(
+            width: 730,
+            height: 530,
+            child: _buildAnimatedImage(
+              imagePath: 'assets/images/intro_2.png',
+              animationValue: animationValue,
+              startAnimationValue: 0.5,
+              endAnimationValue: 1.0,
             ),
           ),
         ],
       ),
-    );
+    ]);
   }
 
-  Widget _buildAnimatedText(
-      {required String text,
-        String? additionalText,
-        required double animationValue,
-        required bool isLeftToRight,
-        required double fontSize,
-        required String color,
-        String? additionalColor}) {
-    double offsetValue = startScrollPos != null ? _scrollController.position.pixels - startScrollPos! : 0;
+  Widget _buildAnimatedText({
+    required String text,
+    String? additionalText,
+    required double animationValue,
+    required bool isLeftToRight,
+    required double fontSize,
+    required String color,
+    String? additionalColor,
+    FontWeight fontWeight = FontWeight.normal,
+  }) {
+    double offsetValue = startScrollPos != null
+        ? _scrollController.position.pixels - startScrollPos!
+        : 0;
 
     return TweenAnimationBuilder(
       tween: Tween<double>(begin: 0.0, end: animationValue),
@@ -163,7 +198,9 @@ class MofinIntroductionState extends State<MofinIntroduction> {
           opacity: value,
           child: Transform.translate(
             offset: Offset(
-                isLeftToRight ? 640.sp * (1 - value) - offsetValue : -640.sp * (1 - value) - offsetValue,
+                isLeftToRight
+                    ? 100.sp * (1 - value) - offsetValue
+                    : -100.sp * (1 - value) - offsetValue,
                 0),
             child: additionalText == null
                 ? Text(
@@ -171,6 +208,7 @@ class MofinIntroductionState extends State<MofinIntroduction> {
                     style: TextStyle(
                       fontSize: fontSize,
                       color: Color(int.parse("0xff$color")),
+                      fontWeight: fontWeight,
                     ),
                   )
                 : RichText(
@@ -181,6 +219,7 @@ class MofinIntroductionState extends State<MofinIntroduction> {
                           style: TextStyle(
                             fontSize: fontSize,
                             color: Color(int.parse("0xff$color")),
+                            fontWeight: fontWeight,
                           ),
                         ),
                         TextSpan(
@@ -189,6 +228,7 @@ class MofinIntroductionState extends State<MofinIntroduction> {
                             fontSize: fontSize,
                             color: Color(
                                 int.parse("0xff${additionalColor ?? color}")),
+                            fontWeight: fontWeight,
                           ),
                         ),
                       ],
@@ -203,22 +243,32 @@ class MofinIntroductionState extends State<MofinIntroduction> {
   Widget _buildAnimatedImage({
     required String imagePath,
     required double animationValue,
-    required bool isLeftToRight,
+    required double startAnimationValue,
+    required double endAnimationValue,
   }) {
-    double offsetValue = startScrollPos != null ? _scrollController.position.pixels - startScrollPos! : 0;
+    double adjustedAnimationValue;
+    if (animationValue < startAnimationValue) {
+      adjustedAnimationValue = 0.0;
+    } else if (animationValue > endAnimationValue) {
+      adjustedAnimationValue = 1.0;
+    } else {
+      adjustedAnimationValue = (animationValue - startAnimationValue) /
+          (endAnimationValue - startAnimationValue);
+    }
 
     return TweenAnimationBuilder(
-      tween: Tween<double>(begin: 1.0, end: animationValue),
+      tween: Tween<double>(begin: 0.0, end: adjustedAnimationValue),
       duration: const Duration(milliseconds: 500),
       builder: (context, double value, child) {
         return Opacity(
           opacity: value,
           child: Transform.translate(
-            offset: Offset(0, 1150.sp * (1 - value) - offsetValue),
+            offset: Offset(0, 400.sp * (1 - value)),
             child: Image.asset(imagePath),
           ),
         );
       },
     );
   }
+
 }

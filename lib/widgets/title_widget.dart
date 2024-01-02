@@ -15,7 +15,9 @@ class AnimatedBackgroundTitle extends StatefulWidget {
   AnimatedBackgroundTitleState createState() => AnimatedBackgroundTitleState();
 }
 
-class AnimatedBackgroundTitleState extends State<AnimatedBackgroundTitle> {
+class AnimatedBackgroundTitleState extends State<AnimatedBackgroundTitle> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
   int _imageIndex = 0;
   final List<String> _images = [
     '../assets/images/title_d.png',
@@ -26,33 +28,53 @@ class AnimatedBackgroundTitleState extends State<AnimatedBackgroundTitle> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 7), (Timer t) {
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+
+    Timer.periodic(const Duration(milliseconds: 3000), (Timer t) {
       setState(() {
         _imageIndex = (_imageIndex + 1) % _images.length;
       });
     });
+
+    Provider.of<ScrollStatusNotifier>(context, listen: false).addListener(() {
+      var scrollPercentage = Provider.of<ScrollStatusNotifier>(context, listen: false).scrollPercentage;
+      _controller.value = scrollPercentage.clamp(0.0, 1.0);
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ScrollStatusNotifier>(
-      builder: (context, ssn, child) {
-        final portionValue = AnimationCalculator.linearInterpolateToZeroOne(
-            scrollPercentage: ssn.scrollPercentage, start: 0, end: 1);
-        final opacity = -pow(portionValue, 6) + 1;
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        double opacity = 1.0 - _animation.value;
+        double offset = -50 * _animation.value;
 
         return Transform.translate(
-          offset: Offset(0, -ssn.scrollPos + ssn.scrollPos * 0.3 * portionValue),
-          child: Center(
-            child: Opacity(
-              opacity: opacity.toDouble(),
+          offset: Offset(0, offset),
+          child: Opacity(
+            opacity: opacity,
+            child: Center(
               child: SizedBox(
                 width: widget.size.width,
                 child: Stack(
                   children: [
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 2000),
-                      // reverseDuration: const Duration(seconds:2),
                       child: Container(
                         key: ValueKey<String>(_images[_imageIndex]),
                         decoration: BoxDecoration(
@@ -75,7 +97,7 @@ class AnimatedBackgroundTitleState extends State<AnimatedBackgroundTitle> {
                             BoxShadow(
                               color: Colors.black.withOpacity(0.25),
                               blurRadius: 4,
-                              offset: const Offset(0, 4), // Shadow position
+                              offset: const Offset(0, 4),
                             ),
                           ],
                         ),
@@ -91,11 +113,6 @@ class AnimatedBackgroundTitleState extends State<AnimatedBackgroundTitle> {
                             colors: const [
                               Colors.white,
                               Colors.white,
-                              // Color(0xff4ea0b4),
-                              // Color(0xff6994e3),
-                              // Color(0xff9283eb),
-                              // Color(0xffe668a5),
-                              // Color(0xffdd514a),
                             ],
                             style: const TextStyle(
                                 fontSize: 96,
